@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ServerStatistics.client.iml" filepath="$PROJECT_DIR$/.idea/modules/ServerStatistics.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ServerStatistics.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ServerStatistics.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ServerStatistics.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ServerStatistics.test.iml" />
+    </modules>
+  </component>
+</project>

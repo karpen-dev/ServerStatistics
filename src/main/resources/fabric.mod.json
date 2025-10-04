@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "serverstatistics",
+  "version": "${version}",
+  "name": "ServerStatistics",
+  "description": "Record your time activity",
+  "authors": ["karpen"],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/minecraft/textures/item/clock.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.karpen.serverstatistics.client.ServerstatisticsClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
