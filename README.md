@@ -9,4 +9,4 @@
 ![https://cdn.karpendev.ru/mods/ss/demo.gif](https://cdn.karpendev.ru/mods/ss/demo.gif)
 
 #### Download links:
-- **[Modrinth](https://soon)**
+- **[Modrinth](https://modrinth.com/mod/serverstatistics)**
