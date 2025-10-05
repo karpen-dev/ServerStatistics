@@ -27,27 +27,23 @@ public class ConfirmResetScreen extends Screen {
                         button -> {
                             if (!isResetConfirmed){
                                 confirmReset();
-                                button.setMessage(Text.literal("§cExit"));
-                                return;
+                                button.setMessage(Text.literal("Success"));
+                                button.active = false;
                             }
-                            else {
-                                if (button.getMessage().equals(Text.literal("§cExit"))) {
-                                    this.close();
-                                }
-                            }
-
                         })
                 .position(width / 2 - 105, height / 2 + 10)
                 .size(100, 20)
                 .build());
 
         this.addDrawableChild(ButtonWidget.builder(
-                        Text.literal("§aCancel"),
+                        Text.literal("§aCANCEL"),
                         button -> {
                             if (!isResetConfirmed) {
                                 cancel();
                             } else {
-                                button.active = false;
+                                button.setMessage(Text.literal("Back"));
+                                assert client != null;
+                                client.setScreen(new ModOptionsScreen());
                             }
                         })
                 .position(width / 2 + 5, height / 2 + 10)
@@ -60,9 +56,9 @@ public class ConfirmResetScreen extends Screen {
         renderInGameBackground(context);
 
         assert client != null;
-        context.drawCenteredTextWithShadow(client.textRenderer, "§6Confirm Data Reset", width / 2, 60, 0xFFFFFF);
-        context.drawCenteredTextWithShadow(client.textRenderer, "§7This will delete ALL playtime data!", width / 2, 80, 0xAAAAAA);
-        context.drawCenteredTextWithShadow(client.textRenderer, "§7This action cannot be undone!", width / 2, 95, 0xAAAAAA);
+        context.drawCenteredTextWithShadow(client.textRenderer, "§6Confirm Data Reset", width / 2, 60, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(client.textRenderer, "§7This will delete ALL playtime data!", width / 2, 80, 0xFFFFFFFF);
+        context.drawCenteredTextWithShadow(client.textRenderer, "§7This action cannot be undone!", width / 2, 95, 0xFFFFFFFF);
 
         super.render(context, mouseX, mouseY, delta);
     }
@@ -70,7 +66,6 @@ public class ConfirmResetScreen extends Screen {
     private void confirmReset() {
         ServerstatisticsClient.getInstance().getDataManager().resetAllData();
         if (client != null) {
-            client.setScreen(new PlayTimeStatsScreen());
             if (client.player != null) {
                 client.player.sendMessage(Text.literal("§cAll playtime data has been reset!"), false);
                 dataManager.resetAllData();
@@ -80,7 +75,7 @@ public class ConfirmResetScreen extends Screen {
 
     private void cancel() {
         if (client != null) {
-            client.setScreen(new PlayTimeStatsScreen());
+            client.setScreen(new ModOptionsScreen());
         }
     }
 

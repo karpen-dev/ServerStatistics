@@ -37,5 +37,7 @@ public class ConfigManager {
     public static class ModConfig {
         private boolean autoSave = true;
         private int autoSaveInterval = 30; // seconds
+        private boolean showBtnInSettings = false;
+        private boolean trackingActivity = true;
     }
 }

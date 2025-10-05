@@ -51,6 +51,11 @@ public class DataManager {
             date.setTotalServerTime(Duration.ofSeconds(
                     Long.parseLong(props.getProperty("totalServerTime", "0"))));
 
+            configManager.getModConfig().setTrackingActivity(
+                    Boolean.parseBoolean(props.getProperty("trackingActivity", String.valueOf(true))));
+            configManager.getModConfig().setShowBtnInSettings(
+                    Boolean.parseBoolean(props.getProperty("showBtnInSettings", String.valueOf(false))));
+
             Map<String, Duration> serverTimes = new HashMap<>();
             for (String key : props.stringPropertyNames()) {
                 if (key.startsWith("server.")) {
@@ -94,6 +99,9 @@ public class DataManager {
 
             props.setProperty("lastSave", java.time.Instant.now().toString());
             props.setProperty("modVersion", "1.0.0");
+
+            props.setProperty("showBtnInSettings", String.valueOf(configManager.getModConfig().isShowBtnInSettings()));
+            props.setProperty("trackingActivity", String.valueOf(configManager.getModConfig().isTrackingActivity()));
 
             try (OutputStream output = new FileOutputStream(dateFile.toFile())) {
                 props.store(output, "Server Statistics date - DO NOT EDIT MANUALLY");

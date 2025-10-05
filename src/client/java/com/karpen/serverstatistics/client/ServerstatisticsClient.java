@@ -71,7 +71,8 @@ public class ServerstatisticsClient implements ClientModInitializer {
             if (screen instanceof StatsScreen) {
                 addButtonToStatsScreen((StatsScreen) screen);
             } else if (screen instanceof OptionsScreen) {
-                addButtonToOptionsScreen((OptionsScreen) screen);
+                if (configManager.getModConfig().isShowBtnInSettings())
+                    addButtonToOptionsScreen((OptionsScreen) screen);
             }
         });
     }

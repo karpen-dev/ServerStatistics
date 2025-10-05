@@ -45,6 +45,9 @@ public class TimeTracker {
         boolean wasIsMenu = isMenu;
         boolean wasOnServer = onServer;
 
+        if (!dataManager.getConfigManager().getModConfig().isTrackingActivity())
+            return;
+
         if (client.world != null && client.getCurrentServerEntry() != null) {
             ServerInfo serverInfo = client.getCurrentServerEntry();
             String serverAddress = serverInfo.address;

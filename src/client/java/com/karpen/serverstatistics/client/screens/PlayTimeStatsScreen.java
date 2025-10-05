@@ -5,7 +5,9 @@ import com.karpen.serverstatistics.client.utils.DataManager;
 import com.karpen.serverstatistics.client.utils.TimeTracker;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.StatsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.stat.StatHandler;
 import net.minecraft.text.Text;
 
 import java.time.Duration;
@@ -39,8 +41,8 @@ public class PlayTimeStatsScreen extends Screen {
                 button.setMessage(Text.literal("Successfully saved"));
             }).dimensions(centerX, buttonY - 30, buttonWidth, buttonHeight).build());
 
-            addDrawableChild(ButtonWidget.builder(Text.literal("Reset Data"), button -> {
-                client.setScreen(new ConfirmResetScreen());
+            addDrawableChild(ButtonWidget.builder(Text.literal("Options"), button -> {
+                client.setScreen(new ModOptionsScreen());
             }).dimensions(centerX, buttonY + 20, buttonWidth, buttonHeight).build());
 
             addDrawableChild(ButtonWidget.builder(Text.literal("Close"), button -> {
@@ -53,13 +55,13 @@ public class PlayTimeStatsScreen extends Screen {
                 button.setMessage(Text.literal("Successfully saved"));
             }).dimensions(centerX - 210, buttonY - 5, buttonWidth, buttonHeight).build());
 
-            addDrawableChild(ButtonWidget.builder(Text.literal("Reset Data"), button -> {
-                client.setScreen(new ConfirmResetScreen());
-            }).dimensions(centerX + 210, buttonY - 5, buttonWidth, buttonHeight).build());
-
-            addDrawableChild(ButtonWidget.builder(Text.literal("Close"), button -> {
-                this.close();
+            addDrawableChild(ButtonWidget.builder(Text.literal("Options"), button -> {
+                client.setScreen(new ModOptionsScreen());
             }).dimensions(centerX, buttonY - 5, buttonWidth, buttonHeight).build());
+
+            addDrawableChild(ButtonWidget.builder(Text.literal("Back"), button -> {
+                this.close();
+            }).dimensions(centerX + 210, buttonY - 5, buttonWidth, buttonHeight).build());
         }
 
         ServerstatisticsClient.getLOGGER().debug("Screen init - Debug: Width={}, Height={}", width, height);
