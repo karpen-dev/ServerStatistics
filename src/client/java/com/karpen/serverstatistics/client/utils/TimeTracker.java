@@ -2,8 +2,10 @@ package com.karpen.serverstatistics.client.utils;
 
 import com.karpen.serverstatistics.client.ServerstatisticsClient;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.server.integrated.IntegratedServer;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -14,6 +16,7 @@ public class TimeTracker {
     private final DataManager dataManager;
 
     @Getter
+    @Setter
     private Instant menuEnterTime;
 
     @Getter
@@ -23,6 +26,7 @@ public class TimeTracker {
     private String currentServer = "";
 
     @Getter
+    @Setter
     private boolean isMenu = true;
 
     @Getter
@@ -43,20 +47,24 @@ public class TimeTracker {
 
         if (client.world != null && client.getCurrentServerEntry() != null) {
             ServerInfo serverInfo = client.getCurrentServerEntry();
-            String serverAdderss = serverInfo.address;
+            String serverAddress = serverInfo.address;
 
-            if (!onServer || !serverAdderss.equals(currentServer)) {
+            if (!onServer || !serverAddress.equals(currentServer)) {
                 if (wasOnServer) {
                     saveCurrentSession();
                 }
-                currentServer = serverAdderss;
+                currentServer = serverAddress;
                 serverJoinTime = Instant.now();
                 onServer = true;
                 isMenu = false;
                 ServerstatisticsClient.getLOGGER().info("Joined server: {}", currentServer);
             }
         } else if (client.world != null) {
-            currentServer = "Singleplayer";
+            IntegratedServer server = client.getServer();
+
+            assert server != null;
+            currentServer = String.format("Singleplayer - %s", server.getSaveProperties().getLevelName());
+
             if (!onServer) {
                 serverJoinTime = Instant.now();
                 onServer = true;
@@ -67,6 +75,7 @@ public class TimeTracker {
             if (!isMenu) {
                 menuEnterTime = Instant.now();
                 isMenu = true;
+                ServerstatisticsClient.getLOGGER().info("Entered menu");
             }
             if (wasOnServer) {
                 saveCurrentSession();

@@ -10,12 +10,14 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.GameMenuScreen;
-import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.StatsScreen;
+import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Instant;
 
 public class ServerstatisticsClient implements ClientModInitializer {
 
@@ -46,6 +48,9 @@ public class ServerstatisticsClient implements ClientModInitializer {
         this.dataManager = new DataManager(configManager);
         this.timeTracker = new TimeTracker(dataManager);
 
+        timeTracker.setMenu(true);
+        timeTracker.setMenuEnterTime(Instant.now());
+
         dataManager.loadDate();
 
         registerEvents();
@@ -63,15 +68,43 @@ public class ServerstatisticsClient implements ClientModInitializer {
         }));
 
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (screen instanceof TitleScreen) {
-                addButtonToTitleScreen((TitleScreen) screen);
-            } else if (screen instanceof GameMenuScreen) {
-                addButtonToGameMenu((GameMenuScreen) screen);
+            if (screen instanceof StatsScreen) {
+                addButtonToStatsScreen((StatsScreen) screen);
+            } else if (screen instanceof OptionsScreen) {
+                addButtonToOptionsScreen((OptionsScreen) screen);
             }
         });
     }
 
-    private void addButtonToTitleScreen(TitleScreen screen) {
+    private void addButtonToStatsScreen(StatsScreen screen) {
+        try {
+            int buttonWidth = 120;
+            int buttonHeight = 20;
+            int x = screen.width - buttonWidth - 10;
+            int y = 5;
+
+            ButtonWidget statsButton = ButtonWidget.builder(
+                            Text.literal("Server Stats"),
+                            button -> {
+                                LOGGER.info("Server Stats button clicked in stats menu!");
+                                MinecraftClient client = MinecraftClient.getInstance();
+                                if (client != null) {
+                                    client.setScreen(new PlayTimeStatsScreen());
+                                }
+                            })
+                    .position(x, y)
+                    .size(buttonWidth, buttonHeight)
+                    .build();
+
+            Screens.getButtons(screen).add(statsButton);
+            LOGGER.info("Button added to StatsScreen at position {}, {}", x, y);
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to add button to StatsScreen", e);
+        }
+    }
+
+    private void addButtonToOptionsScreen(OptionsScreen screen) {
         try {
             int buttonWidth = 120;
             int buttonHeight = 20;
@@ -81,10 +114,10 @@ public class ServerstatisticsClient implements ClientModInitializer {
             ButtonWidget statsButton = ButtonWidget.builder(
                             Text.literal("Server Stats"),
                             button -> {
-                                LOGGER.info("Stats button clicked in main menu!");
+                                LOGGER.info("Server Stats button clicked in options menu!");
                                 MinecraftClient client = MinecraftClient.getInstance();
                                 if (client != null) {
-                                    client.setScreen(new PlayTimeStatsScreen(Text.literal("Server Statistics")));
+                                    client.setScreen(new PlayTimeStatsScreen());
                                 }
                             })
                     .position(x, y)
@@ -92,38 +125,10 @@ public class ServerstatisticsClient implements ClientModInitializer {
                     .build();
 
             Screens.getButtons(screen).add(statsButton);
-            LOGGER.info("Button added to TitleScreen at position {}, {}", x, y);
+            LOGGER.info("Button added to OptionsScreen at position {}, {}", x, y);
 
         } catch (Exception e) {
-            LOGGER.error("Failed to add button to TitleScreen", e);
-        }
-    }
-
-    private void addButtonToGameMenu(GameMenuScreen screen) {
-        try {
-            int buttonWidth = 120;
-            int buttonHeight = 20;
-            int x = 10;
-            int y = 50;
-
-            ButtonWidget statsButton = ButtonWidget.builder(
-                            Text.literal("Server Stats"),
-                            button -> {
-                                LOGGER.info("Stats button clicked in game menu!");
-                                MinecraftClient client = MinecraftClient.getInstance();
-                                if (client != null) {
-                                    client.setScreen(new PlayTimeStatsScreen(Text.literal("Server Statistics")));
-                                }
-                            })
-                    .position(x, y)
-                    .size(buttonWidth, buttonHeight)
-                    .build();
-
-            Screens.getButtons(screen).add(statsButton);
-            LOGGER.info("Button added to GameMenuScreen at position {}, {}", x, y);
-
-        } catch (Exception e) {
-            LOGGER.error("Failed to add button to GameMenuScreen", e);
+            LOGGER.error("Failed to add button to OptionsScreen", e);
         }
     }
 }
