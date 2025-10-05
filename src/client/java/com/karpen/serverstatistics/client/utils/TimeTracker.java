@@ -63,7 +63,7 @@ public class TimeTracker {
             IntegratedServer server = client.getServer();
 
             assert server != null;
-            currentServer = String.format("Singleplayer - %s", server.getSaveProperties().getLevelName());
+            currentServer = String.format("'Singleplayer - %s'", server.getSaveProperties().getLevelName());
 
             if (!onServer) {
                 serverJoinTime = Instant.now();

@@ -31,22 +31,36 @@ public class PlayTimeStatsScreen extends Screen {
         int centerX = (width - buttonWidth) / 2;
         int buttonY = height - 60;
 
-        addDrawableChild(ButtonWidget.builder(Text.literal("Save Data"), button -> {
-            dataManager.saveDate();
-            button.active = false;
-            button.setMessage(Text.literal("Successfully saved"));
-            ServerstatisticsClient.getLOGGER().info("Save Data button clicked - Debug: Action pending");
-        }).dimensions(centerX, buttonY - 30, buttonWidth, buttonHeight).build());
+        assert client != null;
+        if (client.getWindow().getWidth() < (buttonWidth * 5)) {
+            addDrawableChild(ButtonWidget.builder(Text.literal("Save Data"), button -> {
+                dataManager.saveDate();
+                button.active = false;
+                button.setMessage(Text.literal("Successfully saved"));
+            }).dimensions(centerX, buttonY - 30, buttonWidth, buttonHeight).build());
 
-        addDrawableChild(ButtonWidget.builder(Text.literal("Reset Data"), button -> {
-            assert client != null;
-            client.setScreen(new ConfirmResetScreen());
-            ServerstatisticsClient.getLOGGER().info("Reset Data button clicked - Debug: Data reset");
-        }).dimensions(centerX, buttonY + 20, buttonWidth, buttonHeight).build());
+            addDrawableChild(ButtonWidget.builder(Text.literal("Reset Data"), button -> {
+                client.setScreen(new ConfirmResetScreen());
+            }).dimensions(centerX, buttonY + 20, buttonWidth, buttonHeight).build());
 
-        addDrawableChild(ButtonWidget.builder(Text.literal("Close"), button -> {
-            this.close();
-        }).dimensions(centerX, buttonY - 5, buttonWidth, buttonHeight).build());
+            addDrawableChild(ButtonWidget.builder(Text.literal("Close"), button -> {
+                this.close();
+            }).dimensions(centerX, buttonY - 5, buttonWidth, buttonHeight).build());
+        } else {
+            addDrawableChild(ButtonWidget.builder(Text.literal("Save Data"), button -> {
+                dataManager.saveDate();
+                button.active = false;
+                button.setMessage(Text.literal("Successfully saved"));
+            }).dimensions(centerX - 210, buttonY - 5, buttonWidth, buttonHeight).build());
+
+            addDrawableChild(ButtonWidget.builder(Text.literal("Reset Data"), button -> {
+                client.setScreen(new ConfirmResetScreen());
+            }).dimensions(centerX + 210, buttonY - 5, buttonWidth, buttonHeight).build());
+
+            addDrawableChild(ButtonWidget.builder(Text.literal("Close"), button -> {
+                this.close();
+            }).dimensions(centerX, buttonY - 5, buttonWidth, buttonHeight).build());
+        }
 
         ServerstatisticsClient.getLOGGER().debug("Screen init - Debug: Width={}, Height={}", width, height);
     }
@@ -82,7 +96,7 @@ public class PlayTimeStatsScreen extends Screen {
                     centerX - client.textRenderer.getWidth(emptyMessage) / 2, infoY, 0xFFFFFFFF, false);
         } else {
             for (Map.Entry<String, Duration> entry : serverTimes.entrySet()) {
-                String serverName = entry.getKey();
+                String serverName = entry.getKey().replaceAll("'", "");
                 String timeStr = TimeTracker.formatDurationDetailed(entry.getValue());
                 String displayText = serverName + ": " + timeStr;
                 context.drawText(client.textRenderer, displayText,
